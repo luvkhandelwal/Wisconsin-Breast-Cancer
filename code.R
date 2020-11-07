@@ -44,7 +44,8 @@ t<-predict.glm(object=g,newdata=test,type = "response")
 
 t=ifelse(test=t>0.5,yes = 1, no=0 )
 table(test$diagnosis,t)
-cat("The accuracy is",116/126*100)
+cat("The accuracy is",116/124*100)
+
 #Plotting Logistic Data
 
 
@@ -54,3 +55,35 @@ ggplot(data = pred_data,aes(x=rank,y=pmalignant))+
   xlab("Index")+
   ylab("predicted")
 
+#Classification Trees
+library(tree)
+tr<-tree(diagnosis~.,data = train)
+summary(tr)
+plot(tr)
+
+t2<-predict(object=tr,newdata=test,type = "vector")
+
+t2=ifelse(test=t2>0.5,yes = 1, no=0 )
+table(test$diagnosis,t2)
+cat("The accuracy is",115/124*100)
+
+#K-Nearest Neighbour
+ktrain<-train[,1:2]
+ktrain[,3:32]<-scale(train[,3:32])
+
+ktest<-test[,1:2]
+ktest[,3:32]<-scale(test[,3:32])
+library(class)
+kt<-knn(train = ktrain,test = ktest,cl=ktrain$diagnosis,k=5)
+
+table(test$diagnosis,kt)
+
+# K-Means
+
+library(ClusterR) 
+library(cluster) 
+krtrain<-train[,c(-1,-2)]
+
+kr<-kmeans(krtrain,centers = 2,nstart = 10)
+cm <- table(train$diagnosis, kr$cluster)
+cm
