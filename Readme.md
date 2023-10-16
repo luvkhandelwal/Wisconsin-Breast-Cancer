@@ -1,1 +1,1 @@
-Clustering analysis for breast cancer detection
+Logistic Regression analysis for breast cancer detection
